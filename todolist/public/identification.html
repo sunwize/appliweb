@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html ng-app="todoApp" lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
+    <link rel="stylesheet" type="text/css" href="css/identification.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+	  <script src="js/todoApp.js"></script>
+
+    <title>Connexion</title>
+  </head>
+  <body ng-controller="AccountCtrl">
+
+  <!-- Menu -->
+    <div class="row navigation">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand">
+          <img src="img/logo.png" alt="Todo List" width="40" height="40">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link onglet" href="/">Vos tâches<span class="sr-only">(current)</span></a>
+            </li>
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+            <button class="btn btn-outline-success my-2 mr-sm-2 bouton-connexion" type="button" onclick="location.href='/identification'">Se connecter</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="location.href='/creation'">Créer un compte</button>
+          </form>
+        </div>
+      </nav>
+    </div>
+
+  <!-- Page -->
+    <div class="container">
+      <div class="container encadrure">
+        <div class="row titre">
+          <h1>Connexion</h1>
+        </div>
+        <div class="row formulaire">
+          <form ng-submit="connect()">
+            <div class="form-group">
+              <input type="email" class="form-control" placeholder="Email" ng-model="login" required>
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control" placeholder="Mot de passe" ng-model="passwd" required>
+            </div>
+            <p class="erreur" ng-bind="identificationErrorField"></p>
+            <button type="submit" class="btn btn-primary bouton-valider">Se connecter</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,38 @@
+.fond-ajouter-tache {
+    background-color: #2123210f;
+    text-align: center;
+}
+
+.titre {
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.titre2 {
+    padding-top: 20px;
+    padding-bottom: 10px;
+    text-align: left;
+    font-size: 22pt;
+}
+
+.ajouter-tache {
+    max-width: 30%;
+    padding-bottom: 10px;
+}
+
+.fond-liste-taches {
+    text-align: center;
+}
+
+.tache {
+    font-size: 15pt;
+    text-align: center;
+}
+
+.checkmark {
+    zoom: 1.5;
+}
+
+.rien-a-faire {
+    text-align: left;
+}

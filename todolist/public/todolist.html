@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html ng-app="todoApp" lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
+    <link rel="stylesheet" type="text/css" href="css/todolist.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+	<script src="js/todoApp.js"></script>
+
+    <title>Mes tâches</title>
+  </head>
+  <body ng-controller="TodoCtrl">
+
+  <!-- Menu -->
+    <div class="row navigation" ng-controller="AccountCtrl">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand">
+          <img src="img/logo.png" alt="Todo List" width="40" height="40">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link onglet" href="/">Vos tâches<span class="sr-only">(current)</span></a>
+            </li>
+          </ul>
+          <form class="form-inline my-2 my-lg-0" ng-hide="account != null && account != 'null'">
+            <button class="btn btn-outline-success my-2 mr-sm-2 bouton-connexion" type="button" onclick="location.href='/identification'">Se connecter</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="location.href='/creation'">Créer un compte</button>
+          </form>
+          <form class="form-inline my-2 my-lg-0" ng-hide="account == null || account == 'null'">
+            <button class="btn btn-outline-success my-2 mr-sm-2 bouton-connexion" type="button" onclick="location.href='/'">{{account}}</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="button" ng-click="disconnect()">Se déconnecter</button>
+          </form>
+        </div>
+      </nav>
+    </div>
+
+  <!-- Page -->
+    <div class="container-fluid">
+        <div class="row fond-ajouter-tache">
+            <div class="container-fluid">
+                <h1 class="titre">Ajouter une nouvelle tâche</h1>
+                <div class="container ajouter-tache">
+                    <form ng-submit="addTask()">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Description" ng-model="task">
+                            <div class="input-group-append">
+                                <button class="btn btn-success" type="submit"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="container-fluid">
+                <div class="container fond-liste-taches">
+                    <h1 class="titre2">Vos tâches <span ng-hide="!somethingToDo()">({{tasksDone()}}/{{taskList.length}})</span></h1>
+                    <div ng-hide="somethingToDo()">
+                        <p class="rien-a-faire">Vous n'avez rien à faire ...</p>
+                    </div>
+                    <div ng-repeat="task in taskList">
+                        <form ng-submit="updateTask($index)">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                      <input type="checkbox" ng-checked="taskList[$index].done" ng-click="check($index)" class="checkmark">
+                                    </div>
+                                </div>
+                                <span class="form-control tache" ng-hide="editionMode[$index] == true" ng-style="{'background-color' : (task.done == true) ? '#e9ecef' : 'white'}">{{task.description}}</span>
+                                <input type="text" on="updateTask($index)" ng-hide="editionMode[$index] == false" class="form-control tache desc-field" placeholder="Description" value="{{task.description}}">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" ng-hide="editionMode[$index] == true" type="button" ng-click="edit($index)">
+                                      <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                    <button class="btn btn-outline-secondary" ng-hide="editionMode[$index] == false" type="button" ng-click="updateTask($index)">
+                                      <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                                <div class="input-group-append">
+                                    <button class="btn btn-danger" ng-click="deleteTask($index)" type="button"><i class="far fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  </body>
+</html>
