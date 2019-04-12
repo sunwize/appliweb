@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
-var taskModel = require('./../models/Task');
-var userModel = require('./../models/User');
+var taskModel = require('../models/Task');
+var userModel = require('../models/User');
 
 var url = 'mongodb+srv://admin:admin@todolist-bs0vy.mongodb.net/todolist?retryWrites=true';
 

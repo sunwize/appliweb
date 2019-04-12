@@ -1,6 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var dataTaskLayer = require('./routes/dataTaskLayer');
+var dataTaskLayer = require('./dataLayer/dataTaskLayer');
 var uuidv4 = require("uuid/v4");
 
 require('./models/Task');
@@ -114,4 +114,4 @@ app.post('/updateTask', (req, res) => {
     }
 });
 
-app.listen(3000);
+app.listen(8080);
