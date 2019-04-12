@@ -3,6 +3,9 @@ var bodyParser = require('body-parser');
 var dataTaskLayer = require('./dataLayer/dataTaskLayer');
 var uuidv4 = require("uuid/v4");
 
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+
 require('./models/Task');
 
 var app = express();
@@ -114,4 +117,6 @@ app.post('/updateTask', (req, res) => {
     }
 });
 
-app.listen(8080);
+app.listen(server_port, server_ip_address, () => {
+    console.log('Listening on ' + server_ip_address + ':' + server_port);
+});
