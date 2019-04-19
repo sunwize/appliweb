@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html ng-app="todoApp" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="https://unpkg.com/@ionic/core@latest/dist/ionic.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="js/todoApp.js"></script>
+    <script src="js/fonctions.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/@ionic/core@latest/css/ionic.bundle.css">
+</head>
+
+<body ng-controller="AccountCtrl">
+    <ion-app>
+        <ion-header>
+            <ion-toolbar>
+                <ion-buttons slot="start">
+                    <ion-menu-button></ion-menu-button>
+                </ion-buttons>
+                <ion-title>Identification</ion-title>
+            </ion-toolbar>
+        </ion-header>
+
+        <ion-content>
+            <ion-grid>
+                <ion-row>
+                    <ion-col size-md="6" offset-md="3">
+                        <ion-card>
+                            <form ng-submit="">
+                                <ion-card-content>
+                                    <ion-item>
+                                        <ion-label position="floating">Email</ion-label>
+                                        <ion-input type="email" required></ion-input>
+                                    </ion-item>
+                                    <ion-item>
+                                        <ion-label position="floating">Mot de passe</ion-label>
+                                        <ion-input type="password" required></ion-input>
+                                    </ion-item>
+                                    <div style="padding-top: 30px;"></div>
+                                    <ion-button color="success" expand="block" shape="round" type="submit">Se
+                                        connecter</ion-button>
+                                </ion-card-content>
+                            </form>
+                        </ion-card>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-content>
+    </ion-app>
+</body>
+
+</html>

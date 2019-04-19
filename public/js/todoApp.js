@@ -3,12 +3,25 @@ var todoApp = angular.module('todoApp', []);
 todoApp.factory('todoServices', ['$http', $http => {
 
     var services = {
-        addTask: (login, description, cb) => {
+        addTask: (login, description, listName, cb) => {
             var req = {
+                listName: listName,
                 login: login,
                 description: description
             };
             $http.post('/addTask', req)
+                .then(res => {
+                    cb(res);
+                });
+        },
+
+        addList: (list, cb) => {
+            var req = {
+                name: list.name,
+                login: list.login,
+                tasklist: list.tasklist
+            };
+            $http.post('/addList', req)
                 .then(res => {
                     cb(res);
                 });
@@ -19,6 +32,16 @@ todoApp.factory('todoServices', ['$http', $http => {
                 _id: id
             };
             $http.post('/deleteTask', req)
+                .then(res => {
+                    cb(res);
+                });
+        },
+
+        deleteList: (name, cb) => {
+            var req = {
+                name: name
+            };
+            $http.post('/deleteList', req)
                 .then(res => {
                     cb(res);
                 });
@@ -36,6 +59,39 @@ todoApp.factory('todoServices', ['$http', $http => {
                 });
         },
 
+        updateList: (list, name, cb) => {
+            var req = {
+                origin: name,
+                name: list.name,
+                login: list.login,
+                tasklist: list.tasklist
+            };
+            $http.post('/updateList', req)
+                .then(res => {
+                    cb(res);
+                });
+        },
+
+        updateTaskSetFromList: (list, cb) => {
+            var req = {
+                list: list
+            };
+            $http.post('/updateTaskSetFromList', req)
+                .then(res => {
+                    cb(res);
+                });
+        },
+
+        getListTaskSet: (list, cb) => {
+            var req = {
+                taskIds: list.tasklist
+            };
+            $http.post('/getListTaskSet', req)
+                .then(res => {
+                    cb(res);
+                });
+        },
+
         getTaskSet: (login, cb) => {
             $http.post('/getTaskSet/' + login)
                 .then(res => {
@@ -43,6 +99,16 @@ todoApp.factory('todoServices', ['$http', $http => {
                         cb(res.data.taskSet);
                     else
                         cb([]);
+                });
+        },
+
+        getListSet: (login, cb) => {
+            $http.post('/getListSet/' + login)
+                .then(res => {
+                    if(res.data.success)
+                        cb(res.data.listSet)
+                    else
+                        cb([])
                 });
         },
 
@@ -77,24 +143,20 @@ todoApp.factory('todoServices', ['$http', $http => {
 //------------------------------- CONTROLLERS -------------------------------//
 
 todoApp.controller('TodoCtrl', ['$scope', 'todoServices', ($scope, todoServices) => {
-    $scope.taskList = [];
     $scope.editionMode = [];
+    $scope.editionModeList = [];
+    $scope.listSet = [];
+    $scope.taskSets = [];
+    $scope.modalListFocused = null;
 
-    $scope.tasksDone = () => {
-        var cpt = 0;
-        for(var i = 0; i < $scope.taskList.length; i++) {
-            if($scope.taskList[i].done)
-                cpt++;
-        }
-        return cpt;
-    };
-
-    $scope.addTask = () => {
+    $scope.addTask = (listIndex) => {
         var connectedUser = window.sessionStorage.getItem('login');
-        if($scope.task == "" || $scope.task == undefined || connectedUser == null || connectedUser == 'null')
+        var taskDesc = document.getElementById('modal-task').value;
+        console.log('index liste : ' + listIndex);
+        if(taskDesc == "" || taskDesc == undefined || connectedUser == null || connectedUser == 'null')
             return;
         
-        todoServices.addTask(connectedUser, $scope.task, res => {
+        todoServices.addTask(connectedUser, taskDesc, $scope.listSet[listIndex].name, res => {
             console.log(res);
             if(res) {
                 console.log('Task : ' + $scope.task + " added!");
@@ -104,18 +166,54 @@ todoApp.controller('TodoCtrl', ['$scope', 'todoServices', ($scope, todoServices)
         
         $scope.task = "";
     };
+
+    $scope.addList= () => {
+        var connectedUser = window.sessionStorage.getItem('login');
+        if($scope.listDescription == "" || $scope.listDescription == undefined || connectedUser == null || connectedUser == 'null')
+            return;
+        var list = {
+            name: $scope.listDescription,
+            login: connectedUser,
+            tasklist: []
+        };
+        todoServices.addList(list, res => {
+            if(res.data.success)
+                console.log('List successfuly added!');
+            else
+                console.log('Failure while adding list');
+            $scope.listDescription = "";
+            $scope.reload();
+        });
+    };
     
-    $scope.deleteTask = index => {
-        var taskToDelete = $scope.taskList[index];
-        
-        todoServices.deleteTask(taskToDelete._id, res => {
-            console.log(taskToDelete.description + ' deleted!');
+    $scope.deleteTask = id => {
+        todoServices.deleteTask(id, res => {
             $scope.reload();
         });
     };
 
-    $scope.check = index => {
-        var taskToCheck = $scope.taskList[index];
+    $scope.deleteList = index => {
+        var listToDelete = $scope.listSet[index];
+        var tasksToDelete = listToDelete.tasklist;
+
+        for(var i = 0; i < tasksToDelete.length; i++) {
+            console.log(tasksToDelete[i]);
+            $scope.deleteTask(tasksToDelete[i]);
+        }
+        
+        todoServices.deleteList(listToDelete.name, res => {
+            if(res.data.success)
+                console.log(listToDelete.name + ' deleted!');
+            else
+                console.log('Failure while deleting list')
+            $scope.reload();
+        });
+    };
+
+    $scope.check = (listIndex, taskIndex) => {
+        var taskToCheck = $scope.taskSets[listIndex][taskIndex];
+        if(taskToCheck == null)
+            return;
         taskToCheck.done = !taskToCheck.done;
         todoServices.updateTask(taskToCheck, res => {
             console.log(res);
@@ -127,36 +225,73 @@ todoApp.controller('TodoCtrl', ['$scope', 'todoServices', ($scope, todoServices)
         });
     };
 
-    $scope.updateTask = index => {
-        var taskToUpdate = $scope.taskList[index];
-        var elements = document.getElementsByClassName('desc-field');
-        taskToUpdate.description = elements[index].value;
+    $scope.updateTask = (listIndex, taskIndex) => {
+        $scope.taskSets[listIndex][taskIndex].editMode = false;
+        var taskToUpdate = $scope.taskSets[listIndex][taskIndex];
+        taskToUpdate.description = document.getElementById('desc-field'+listIndex+'-'+taskIndex).value;
         todoServices.updateTask(taskToUpdate, res => {
             console.log(res);
             $scope.reload();
         });
     };
 
-    $scope.somethingToDo = () => {
-        return $scope.taskList.length > 0;
+    $scope.updateList = index => {
+        var areas = document.getElementsByClassName('liste-area');
+        var origin = areas[index].textContent;
+        var listToUpdate = $scope.listSet[index];
+        var elements = document.getElementsByClassName('desc-field-list');
+        listToUpdate.name = elements[index].value;
+        console.log(origin);
+        todoServices.updateList(listToUpdate, origin, res => {
+            console.log(res);
+            $scope.reload();
+        });
     };
 
-    $scope.edit = index => {
-        for(var i = 0; i < $scope.editionMode.length; i++)
-            $scope.editionMode[i] = false;
-        $scope.editionMode[index] = true;
+    $scope.updateTaskSetFromList = (list, index) => {
+        todoServices.updateTaskSetFromList(list, res => {
+            if(res.data.success) {
+                $scope.taskSets[index] = res.data.taskSet;
+                for(var i = 0; i < $scope.taskSets[index].length; i++) {
+                    $scope.taskSets[index][i].editMode = false;
+                }
+            }
+            else
+                console.log(res.data.err);
+        });
+    };
+
+    $scope.edit = (listIndex, taskIndex) => {
+        $scope.taskSets[listIndex][taskIndex].editMode = true;
         setTimeout( () => {
-            var elements = document.getElementsByClassName('desc-field');
+            var element = document.getElementById('desc-field'+listIndex+'-'+taskIndex);
+            element.select();
+        }, 10);
+    };
+
+    $scope.editList = index => {
+        for(var i = 0; i < $scope.editionModeList.length; i++)
+            $scope.editionModeList[i] = false;
+        $scope.editionModeList[index] = true;
+        setTimeout( () => {
+            var elements = document.getElementsByClassName('desc-field-list');
             elements[index].select();
         }, 10);
     };
 
+    $scope.setModalFocus = index => {
+        $scope.modalListFocused = index;
+    };
+
     $scope.reload = () => {
-        todoServices.getTaskSet(window.sessionStorage.getItem('login'), res => {
-            $scope.taskList = res;
-            $scope.editionMode = [];
-            for(var i = 0; i < $scope.taskList.length; i++)
-                $scope.editionMode.push(false);
+        todoServices.getListSet(window.sessionStorage.getItem('login'), listSet => {
+            $scope.listSet = listSet;
+            $scope.editionModeList = [];
+            
+            for(var i = 0; i < listSet.length; i++) {
+                $scope.updateTaskSetFromList(listSet[i], i);
+                $scope.editionModeList.push(false);
+            }
         });
     };
 
@@ -174,7 +309,7 @@ todoApp.controller('AccountCtrl', ['$scope', '$http', 'todoServices', ($scope, $
                 window.sessionStorage.setItem('login', $scope.login);
                 console.log(window.sessionStorage.getItem('login') + ' is connected!');
                 $scope.identificationErrorField = "";
-                window.location.href = '/';
+                window.location.href = '/todolist';
             }
             else {
                 console.log('Impossible de se connecter !')
@@ -197,7 +332,7 @@ todoApp.controller('AccountCtrl', ['$scope', '$http', 'todoServices', ($scope, $
                     console.log($scope.login + ' has been added!');
                     window.sessionStorage.setItem('login', $scope.login);
                     $scope.creationErrorField = "";
-                    window.location.href = '/';
+                    window.location.href = '/todolist';
                 }
                 else {
                     console.log('Account creation failure');

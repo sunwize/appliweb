@@ -39,3 +39,10 @@
   padding: 0;
   text-align: center;
 }
+
+@media only screen and (orientation: portrait) {
+  .encadrure {
+    max-width: 100%;
+    zoom: 1.5;
+  }
+}

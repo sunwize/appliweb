@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var dataTaskLayer = require('./dataLayer/dataTaskLayer');
 var uuidv4 = require("uuid/v4");
 
-var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 8080;
 var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 
 require('./models/Task');
@@ -17,7 +17,7 @@ app.set('views', __dirname + '/public');
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-app.get('/', (req, res) => {
+app.get('/todolist', (req, res) => {
     res.render('todolist.html');
 });
 
@@ -26,6 +26,10 @@ app.get('/creation', (req, res) => {
 });
 
 app.get('/identification', (req, res) => {
+    res.render('identification.html');
+});
+
+app.get('/', (req, res) => {
     res.render('identification.html');
 });
 
@@ -71,11 +75,25 @@ app.post('/addTask', (req, res) => {
         done: false,
         login: req.body.login
     };
-    dataTaskLayer.addTask(task, err => {
+    dataTaskLayer.addTask(task, req.body.listName, err => {
         if(err)
             res.send({success: false, task: task, err: err});
         else
             res.send({success: true, task: task});
+    });
+});
+
+app.post('/addList', (req, res) => {
+    var list = {
+        name: req.body.name,
+        login: req.body.login,
+        tasklist: req.body.tasklist
+    };
+    dataTaskLayer.addList(list, err => {
+        if(err)
+            res.send({success: false, err: err});
+        else
+            res.send({success: true});
     });
 });
 
@@ -92,12 +110,35 @@ app.post('/deleteTask', (req, res) => {
     }
 });
 
+app.post('/deleteList', (req, res) => {
+    if(!req.body.name) {
+        res.send({success: false, err: "List name empty"});
+    }
+    else {
+        dataTaskLayer.deleteListByName(req.body.name, (err, doc) => {
+            if(err)
+                res.send({success: false, err: err});
+            else
+                res.send({success: true});
+        });
+    }
+});
+
 app.post('/getTaskSet/:login', (req, res) => {
     dataTaskLayer.getTaskSet(req.params.login, (err, taskSet) => {
         if(err)
             res.send({success: false, err: err});
         else
             res.send({success: true, taskSet: taskSet});
+    });
+});
+
+app.post('/getListSet/:login', (req, res) => {
+    dataTaskLayer.getListSet(req.params.login, (err, listSet) => {
+        if(err)
+            res.send({success: false, err: err});
+        else
+            res.send({success: true, listSet: listSet});
     });
 });
 
@@ -113,6 +154,36 @@ app.post('/updateTask', (req, res) => {
         };
         dataTaskLayer.updateTask(task, () => {
             res.send({success: true, task: task});
+        });
+    }
+});
+
+app.post('/updateList', (req, res) => {
+    if(!req.body.name) {
+        res.send({success: false, err: "One field is empty"});
+    }
+    else {
+        var list = {
+            name: req.body.name,
+            login: req.body.login,
+            tasklist: req.body.tasklist
+        };
+        dataTaskLayer.updateList(list, req.body.origin, (err, doc) => {
+            if(err)
+                res.send({success: true, err: err});
+            else
+                res.send({success: true, list: list});
+        });
+    }
+});
+
+app.post('/updateTaskSetFromList', (req, res) => {
+    if(!req.body.list)
+        res.send({success: false, err: "List missing"});
+    else {
+        var list = req.body.list;
+        dataTaskLayer.updateTaskSetFromList(list, taskSet => {
+            res.send({success: true, taskSet: taskSet});
         });
     }
 });
