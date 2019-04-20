@@ -1,0 +1,95 @@
+.footer {
+    height: 150px;
+}
+
+.fond-ajouter-tache {
+    background-color: #2123210f;
+    text-align: center;
+}
+
+.titre {
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.titre2 {
+    padding-top: 20px;
+    padding-bottom: 10px;
+    text-align: left;
+    font-size: 22pt;
+}
+
+.ajouter-tache {
+    max-width: 30%;
+    padding-bottom: 10px;
+}
+
+@media only screen and (orientation: portrait) {
+    .ajouter-tache {
+        max-width: 100%;
+    }
+
+    .fond-liste-taches {
+        max-width: 100%;
+    }
+
+    .liste-description {
+      font-size: 80pt;
+    }
+
+    #exampleModal {
+        zoom: 2;
+    }
+}
+
+.fond-liste-taches {
+    text-align: left;
+}
+
+.tache {
+    font-size: 15pt;
+    text-align: left;
+}
+
+.checkmark {
+    zoom: 1.5;
+}
+
+.rien-a-faire {
+    text-align: left;
+}
+
+.bouton-liste {
+    display: block;
+    font-size: 18pt;
+    width: 100%;
+}
+
+.liste-taches {
+    background-color: #007bff0d;
+}
+
+.tache-box {
+    background-color: #fbfcfe;
+    border-color: transparent;
+    padding-top: 10px;
+}
+
+.list-form {
+    margin-top: 15px;
+}
+
+.liste {
+    font-size: 18pt;
+    color: white;
+    background-color: #007bff;
+}
+
+.liste:focus {
+    background-color: #007bff;
+    color: white;
+}
+
+.desc-field-list {
+    text-align: center;
+}

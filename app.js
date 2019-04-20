@@ -12,8 +12,8 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.use(express.static(__dirname + '/public'));
-app.set('views', __dirname + '/public');
+app.use(express.static(__dirname + '/IonicCordova/www'));
+app.set('views', __dirname + '/IonicCordova/www');
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 

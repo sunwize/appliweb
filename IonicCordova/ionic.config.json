@@ -1,0 +1,79 @@
+{
+  "name": "todolist",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic1",
+  "watchPatterns": [
+    "scss/**/*",
+    "www/**/*",
+    "!www/lib/**/*",
+    "!www/**/*.map"
+  ],
+  "proxies": [
+	{
+      "path": "/",
+      "proxyUrl": "http://0.0.0.0:8080/"
+    },
+	{
+      "path": "/todolist",
+      "proxyUrl": "http://0.0.0.0:8080/todolist"
+    },
+	{
+      "path": "/creation",
+      "proxyUrl": "http://0.0.0.0:8080/creation"
+    },
+	{
+      "path": "/identification",
+      "proxyUrl": "http://0.0.0.0:8080/identification"
+    },
+    {
+      "path": "/getTaskSet/:login",
+      "proxyUrl": "http://0.0.0.0:8080/getTaskSet/:login"
+    },
+    {
+      "path": "/addTask",
+      "proxyUrl": "http://0.0.0.0:8080/addTask"
+    },
+    {
+      "path": "/deleteTask",
+      "proxyUrl": "http://0.0.0.0:8080/deleteTask"
+    },
+	{
+      "path": "/addList",
+      "proxyUrl": "http://0.0.0.0:8080/addList"
+    },
+	{
+      "path": "/deleteList",
+      "proxyUrl": "http://0.0.0.0:8080/deleteList"
+    },
+	{
+      "path": "/addAcount",
+      "proxyUrl": "http://0.0.0.0:8080/addAccount"
+    },
+	{
+      "path": "/findAccount",
+      "proxyUrl": "http://0.0.0.0:8080/findAccount"
+    },
+	{
+      "path": "/deleteTask",
+      "proxyUrl": "http://0.0.0.0:8080/deleteTask"
+    },
+	{
+      "path": "/getListSet/:login",
+      "proxyUrl": "http://0.0.0.0:8080/getListSet/:login"
+    },
+	{
+      "path": "/updateTask",
+      "proxyUrl": "http://0.0.0.0:8080/updateTask"
+    },
+	{
+      "path": "/updateList",
+      "proxyUrl": "http://0.0.0.0:8080/updateList"
+    },
+	{
+      "path": "/updateTaskSetFromList",
+      "proxyUrl": "http://0.0.0.0:8080/updateTaskSetFromList"
+    }
+  ]
+}
