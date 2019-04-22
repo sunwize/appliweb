@@ -12,3 +12,5 @@ L'application est hébergée en ligne sur Heroku au lien suivant : https://todol
 Pour faire fonctionner l'application en local :
 - Cloner le repository : git clone https://github.com/sunwize/appliweb.git
 - Lancer start.cmd
+
+Auteur : Colin Clisson
