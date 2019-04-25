@@ -153,23 +153,23 @@
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <div class="input-group-text">
-                        <input type="checkbox" ng-checked="taskSets[$parent.$index][$index].done"
+                        <input type="checkbox" ng-checked="task.done"
                           ng-click="check($parent.$index, $index)" class="checkmark">
                       </div>
                     </div>
                     <span class="form-control tache" ng-hide="taskSets[$parent.$index][$index].editMode == true"
                       ng-style="{'background-color' : (task.done == true) ? '#e9ecef' : 'white'}">{{task.description}}</span>
-                    <input type="text" ng-hide="taskSets[$parent.$index][$index].editMode == false"
+                    <input type="text" ng-hide="task.editMode == false"
                       class="form-control tache desc-field" id="{{'desc-field'+$parent.$index+'-'+$index}}"
                       placeholder="Description" value="{{task.description}}">
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary"
-                        ng-hide="taskSets[$parent.$index][$index].editMode == true" type="button"
+                        ng-hide="task.editMode == true" type="button"
                         ng-click="edit($parent.$index, $index)">
                         <i class="fas fa-pencil-alt"></i>
                       </button>
                       <button class="btn btn-outline-secondary"
-                        ng-hide="taskSets[$parent.$index][$index].editMode == false" type="button"
+                        ng-hide="task.editMode == false" type="button"
                         ng-click="updateTask($parent.$index, $index)">
                         <i class="fas fa-check"></i>
                       </button>
